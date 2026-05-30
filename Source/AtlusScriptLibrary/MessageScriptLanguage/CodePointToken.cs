@@ -52,11 +52,26 @@ public struct CodePointToken : IToken, IEquatable<CodePointToken>
     }
 
     public bool Equals(CodePointToken other) => Bytes.SequenceEqual(other.Bytes);
-    public override bool Equals(object obj)
+    public override bool Equals(object obj) => Equals(obj as IToken);
+
+    public bool Equals(IToken other)
     {
-        if (obj is null || obj is not CodePointToken) return false;
-        return Equals((CodePointToken)obj);
+        if (other is null || other.Kind != TokenKind.CodePoint) return false;
+        return Equals((CodePointToken)other);
     }
+
+    public static bool Equals(CodePointToken a, IToken b)
+    {
+        if (a == null) return b is null;
+        return a.Equals(b);
+    }
+    public static bool Equals(IToken a, CodePointToken b) => Equals(b, a);
+
+    public static bool operator ==(CodePointToken x, IToken y) => Equals(x, y);
+    public static bool operator !=(CodePointToken x, IToken y) => !Equals(x, y);
+
+    public static bool operator ==(IToken x, CodePointToken y) => Equals(y, x);
+    public static bool operator !=(IToken x, CodePointToken y) => !Equals(y, x);
 
     public override int GetHashCode() => Bytes.GetHashCode();
 }

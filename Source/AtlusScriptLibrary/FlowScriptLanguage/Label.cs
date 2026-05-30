@@ -1,4 +1,7 @@
-﻿namespace AtlusScriptLibrary.FlowScriptLanguage;
+﻿using System;
+using System.Collections.Generic;
+
+namespace AtlusScriptLibrary.FlowScriptLanguage;
 
 /// <summary>
 /// Represents a single named label in a flow script.
@@ -39,11 +42,27 @@ public class Label
     public bool Equals(Label other)
     {
         if (ReferenceEquals(this, other)) return true;
-        if (other == null) return false;
+        if (other is null) return false;
 
         return Name == other.Name && InstructionIndex == other.InstructionIndex;
     }
 
-    public static bool operator ==(Label x, Label y) => x.Equals(y);
-    public static bool operator !=(Label x, Label y) => !x.Equals(y);
+    public override bool Equals(object obj)
+    {
+        if (ReferenceEquals(this, obj)) return true;
+        if (obj is null || obj is not Label) return false;
+        return Equals(obj as Label);
+    }
+
+    public static bool Equals (Label x, Label y)
+    {
+        if (ReferenceEquals(x, y)) return true;
+        if (x is null) return y is null;
+        return x.Equals(y);
+    }
+
+    public override int GetHashCode() => HashCode.Combine(Name, InstructionIndex);
+
+    public static bool operator ==(Label x, Label y) => Equals(x, y);
+    public static bool operator !=(Label x, Label y) => !Equals(x, y);
 }

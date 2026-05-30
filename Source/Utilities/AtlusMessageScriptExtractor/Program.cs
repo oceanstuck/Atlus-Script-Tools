@@ -419,7 +419,7 @@ class Program
         Writer.Flush();
     }
 
-    static void WriteWindow(IDialog window)
+    static void WriteWindow(Dialog window)
     {
         Writer.WriteLine(window.Name);
 

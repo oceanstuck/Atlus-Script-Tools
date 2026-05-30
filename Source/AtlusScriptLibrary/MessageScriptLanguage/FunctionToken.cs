@@ -90,27 +90,34 @@ public struct FunctionToken : IToken, IEquatable<FunctionToken>
 
     public bool Equals(FunctionToken other)
     {
-        if (this.FunctionTableIndex != other.FunctionTableIndex) return false;
-        if (this.FunctionIndex != other.FunctionIndex) return false;
-        if (this.UseIdentifierByte != other.UseIdentifierByte) return false;
-        return (this.Arguments.SequenceEqual(other.Arguments));
+        if (FunctionTableIndex != other.FunctionTableIndex) return false;
+        if (FunctionIndex != other.FunctionIndex) return false;
+        if (UseIdentifierByte != other.UseIdentifierByte) return false;
+        return Arguments.SequenceEqual(other.Arguments);
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object obj) => Equals(obj as IToken);
+
+    public override int GetHashCode() => HashCode.Combine(FunctionTableIndex, FunctionIndex, UseIdentifierByte, Arguments);
+
+    public bool Equals(IToken other)
     {
-        if (obj is null || obj is not FunctionToken) return false;
-        return Equals((FunctionToken)obj);
+        if (other is null || other.Kind != TokenKind.Function) return false;
+        return Equals((FunctionToken)other);
     }
 
-    public override int GetHashCode()
+    public static bool Equals(FunctionToken a, IToken b)
     {
-        int hashCode = 2059593324;
-        hashCode = hashCode * -1521134295 + FunctionTableIndex.GetHashCode();
-        hashCode = hashCode * -1521134295 + FunctionIndex.GetHashCode();
-        hashCode = hashCode * -1521134295 + EqualityComparer<List<ushort>>.Default.GetHashCode(Arguments);
-        hashCode = hashCode * -1521134295 + UseIdentifierByte.GetHashCode();
-        return hashCode;
+        if (a == null) return b is null;
+        return a.Equals(b);
     }
+    public static bool Equals(IToken a, FunctionToken b) => Equals(b, a);
+
+    public static bool operator ==(FunctionToken x, IToken y) => Equals(x, y);
+    public static bool operator !=(FunctionToken x, IToken y) => !Equals(x, y);
+
+    public static bool operator ==(IToken x, FunctionToken y) => Equals(y, x);
+    public static bool operator !=(IToken x, FunctionToken y) => !Equals(y, x);
 
     /// <summary>
     /// Gets the token type.

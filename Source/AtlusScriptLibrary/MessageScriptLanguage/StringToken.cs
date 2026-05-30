@@ -37,10 +37,25 @@ public struct StringToken : IToken, IEquatable<StringToken>
     TokenKind IToken.Kind => TokenKind.String;
 
     public bool Equals(StringToken other) => Value == other.Value;
-    public override bool Equals(object obj)
+    public override bool Equals(object obj) => Equals(obj as IToken);
+
+    public static bool Equals(StringToken a, IToken b)
     {
-        if (obj is null || obj is not StringToken) return false;
-        return Equals((StringToken)obj);
+        if (a == null) return b is null;
+        return a.Equals(b);
+    }
+    public static bool Equals(IToken a, StringToken b) => Equals(b, a);
+
+    public static bool operator ==(StringToken x, IToken y) => Equals(x, y);
+    public static bool operator !=(StringToken x, IToken y) => !Equals(x, y);
+
+    public static bool operator ==(IToken x, StringToken y) => Equals(y, x);
+    public static bool operator !=(IToken x, StringToken y) => !Equals(y, x);
+
+    public bool Equals(IToken other)
+    {
+        if (other is null || other.Kind != TokenKind.String) return false;
+        return Equals((StringToken)other);
     }
 
     public override int GetHashCode() => Value.GetHashCode();

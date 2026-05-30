@@ -7,7 +7,7 @@ namespace AtlusScriptLibrary.MessageScriptLanguage;
 /// <summary>
 /// Represents a named dialogue message speaker.
 /// </summary>
-public sealed class NamedSpeaker : ISpeaker, IEnumerable<IToken>, IEquatable<NamedSpeaker>
+public sealed class NamedSpeaker : Speaker, IEnumerable<IToken>, IEquatable<NamedSpeaker>
 {
     /// <summary>
     /// Gets the name of the speaker.
@@ -38,7 +38,7 @@ public sealed class NamedSpeaker : ISpeaker, IEnumerable<IToken>, IEquatable<Nam
     {
         string str = string.Empty;
 
-        if (Name != null && Name.Tokens.Count > 0)
+        if (Name is not null && Name.Tokens.Count > 0)
         {
             foreach (var token in Name.Tokens)
                 str += token + " ";
@@ -57,15 +57,17 @@ public sealed class NamedSpeaker : ISpeaker, IEnumerable<IToken>, IEquatable<Nam
         return ((IEnumerable<IToken>)Name).GetEnumerator();
     }
 
-    public bool Equals(NamedSpeaker other) => Name == other.Name;
+    public override bool Equals(NamedSpeaker other) => Name == other.Name;
+    public override bool Equals(VariableSpeaker other) => false;
 
-    public override int GetHashCode()
+    public override bool Equals(object obj)
     {
-        int hashCode = 1612084825;
-        hashCode = hashCode * -1521134295 + EqualityComparer<TokenText>.Default.GetHashCode(Name);
-        hashCode = hashCode * -1521134295 + Kind.GetHashCode();
-        return hashCode;
+        if (ReferenceEquals(this, obj)) return true;
+        if (obj is null || obj is not NamedSpeaker) return false;
+        return Equals(obj as NamedSpeaker);
     }
+
+    public override int GetHashCode() => Name.GetHashCode();
 
     /// <summary>
     /// Gets the speaker type.

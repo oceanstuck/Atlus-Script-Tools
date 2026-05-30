@@ -8,17 +8,12 @@ namespace AtlusScriptLibrary.MessageScriptLanguage;
 /// <summary>
 /// Represents a dialog window in a message script.
 /// </summary>
-public sealed class MessageDialog : IDialog, IEquatable<MessageDialog>
+public sealed class MessageDialog : Dialog, IEquatable<MessageDialog>
 {
-    /// <summary>
-    /// Gets the text identifier of this dialog window.
-    /// </summary>
-    //public string Name { get; set; }
-
     /// <summary>
     /// Gets or sets the speaker of this dialog window.
     /// </summary>
-    public ISpeaker Speaker { get; set; }
+    public Speaker Speaker { get; set; }
 
     /// <summary>
     /// Gets the pages contained in this dialog window.
@@ -43,7 +38,7 @@ public sealed class MessageDialog : IDialog, IEquatable<MessageDialog>
     /// </summary>
     /// <param name="identifier">The identifier of the window.</param>
     /// <param name="speaker">The speaker of the window.</param>
-    public MessageDialog(string identifier, ISpeaker speaker)
+    public MessageDialog(string identifier, Speaker speaker)
     {
         Name = identifier ?? throw new ArgumentNullException(nameof(identifier));
         Speaker = speaker;
@@ -56,7 +51,7 @@ public sealed class MessageDialog : IDialog, IEquatable<MessageDialog>
     /// <param name="identifier">The identifier of the window.</param>
     /// <param name="speaker">The speaker of the window.</param>
     /// <param name="lines">The list of lines of the window.</param>
-    public MessageDialog(string identifier, ISpeaker speaker, List<TokenText> lines)
+    public MessageDialog(string identifier, Speaker speaker, List<TokenText> lines)
     {
         Name = identifier ?? throw new ArgumentNullException(nameof(identifier));
         Speaker = speaker;
@@ -81,7 +76,7 @@ public sealed class MessageDialog : IDialog, IEquatable<MessageDialog>
     /// <param name="identifier">The identifier of the window.</param>
     /// <param name="speaker">The speaker of the window.</param>
     /// <param name="lines">The list of lines of the window.</param>
-    public MessageDialog(string identifier, ISpeaker speaker, params TokenText[] lines)
+    public MessageDialog(string identifier, Speaker speaker, params TokenText[] lines)
     {
         Name = identifier ?? throw new ArgumentNullException(nameof(identifier));
         Speaker = speaker;
@@ -119,28 +114,16 @@ public sealed class MessageDialog : IDialog, IEquatable<MessageDialog>
         return Pages.GetEnumerator();
     }
 
-    /*IEnumerator IEnumerable.GetEnumerator()
-    {
-        return GetEnumerator();
-    }*/
-
-    public bool Equals(MessageDialog obj)
+    public override bool Equals(MessageDialog obj)
     {
         if (ReferenceEquals(this, obj)) return true;
         if (obj is null) return false;
 
         if (Name != obj.Name) return false;
-        if (Speaker != obj.Speaker) return false;
-        return (Pages.SequenceEqual(obj.Pages));
+        if (!Speaker.Equals(obj.Speaker)) return false;
+        return Pages.SequenceEqual(obj.Pages);
     }
-
-    /*public bool Equals(IDialog obj)
-    {
-        if (ReferenceEquals(this, obj)) return true;
-        if (obj is null || obj.Kind != DialogKind.Message) return false;
-
-        return Equals((MessageDialog)obj);
-    }*/
+    public override bool Equals(SelectionDialog other) => false;
 
     public override bool Equals(object obj)
     {
@@ -150,28 +133,5 @@ public sealed class MessageDialog : IDialog, IEquatable<MessageDialog>
         return Equals((MessageDialog)obj);
     }
 
-    public static bool Equals(MessageDialog x, MessageDialog y)
-    {
-        if (ReferenceEquals(x, y)) return true;
-        if (x is null || y is null) return false;
-        return x.Equals(y);
-    }
-
-    public override int GetHashCode()
-    {
-        int hashCode = 1327504663;
-        hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Name);
-        hashCode = hashCode * -1521134295 + EqualityComparer<ISpeaker>.Default.GetHashCode(Speaker);
-        hashCode = hashCode * -1521134295 + EqualityComparer<List<TokenText>>.Default.GetHashCode(Pages);
-        return hashCode;
-    }
-
-    public static bool operator ==(MessageDialog x, MessageDialog y) => Equals(x, y);
-    public static bool operator !=(MessageDialog x, MessageDialog y) => !Equals(x, y);
-
-    /*public static bool operator ==(MessageDialog x, IDialog y) => x.Equals(y);
-    public static bool operator !=(MessageDialog x, IDialog y) => !x.Equals(y);
-
-    public static bool operator ==(IDialog x, MessageDialog y) => y.Equals(x);
-    public static bool operator !=(IDialog x, MessageDialog y) => !y.Equals(x);*/
+    public override int GetHashCode() => HashCode.Combine(Name, Speaker, Pages);
 }

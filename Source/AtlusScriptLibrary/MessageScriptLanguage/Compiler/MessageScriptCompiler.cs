@@ -355,7 +355,7 @@ public class MessageScriptCompiler
 
         foreach (var dialogContext in dialogContexts)
         {
-            IDialog dialog;
+            Dialog dialog;
 
             if (TryGet(dialogContext, () => dialogContext.messageDialog(), out var messageDialogContext))
             {
@@ -413,7 +413,7 @@ public class MessageScriptCompiler
         //
         // Parse speaker name
         //
-        ISpeaker speaker = null;
+        Speaker speaker = null;
         if (TryGet(context, context.speakerName, out var speakerNameContentContext))
         {
             if (!TryGetFatal(speakerNameContentContext, () => speakerNameContentContext.tokenText(), "Expected dialog window speaker name text", out var speakerNameTagTextContext))

@@ -62,7 +62,7 @@ public class TokenText : IEnumerable<IToken>, IEquatable<TokenText>
     public bool Equals(TokenText obj)
     {
         if (ReferenceEquals(this, obj)) return true;
-        if (obj is null) { return false; }
+        if (obj is null) return false;
 
         return Tokens.SequenceEqual(obj.Tokens, new TokenComparer());
     }
@@ -78,7 +78,7 @@ public class TokenText : IEnumerable<IToken>, IEquatable<TokenText>
     public static bool Equals(TokenText x, TokenText y)
     {
         if (ReferenceEquals(x, y)) return true;
-        if (x is null || y is null) return false;
+        if (x is null) return y is null;
         return x.Equals(y);
     }
 

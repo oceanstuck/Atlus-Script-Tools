@@ -1,17 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 namespace AtlusScriptLibrary.MessageScriptLanguage;
 
 /// <summary>
 /// Common interface for dialogue message speakers.
 /// </summary>
-public abstract class ISpeaker : IEquatable<ISpeaker>
+public abstract class Speaker : IEquatable<Speaker>
 {
     /// <summary>
     /// Gets the speaker type.
     /// </summary>
     public abstract SpeakerKind Kind { get; }
 
-    public bool Equals(ISpeaker other)
+    public bool Equals(Speaker other)
     {
         if (ReferenceEquals(this, other)) return true;
         if (other is null || other.Kind != Kind) return false;
@@ -19,30 +20,33 @@ public abstract class ISpeaker : IEquatable<ISpeaker>
         switch (Kind)
         {
             case SpeakerKind.Named:
-                return ((NamedSpeaker)this).Equals(other as NamedSpeaker);
+                return Equals(other as NamedSpeaker);
             case SpeakerKind.Variable:
-                return ((VariableSpeaker)this).Equals(other as VariableSpeaker);
+                return Equals(other as VariableSpeaker);
             default:
                 throw new Exception("Unrecognized speaker kind");
         }
     }
 
+    public abstract bool Equals(NamedSpeaker other);
+    public abstract bool Equals(VariableSpeaker other);
+
     public override bool Equals(object obj)
     {
         if (ReferenceEquals(this, obj)) return true;
-        if (obj is null || obj is not ISpeaker) return false;
-        return Equals(obj as ISpeaker);
+        if (obj is null || obj is not Speaker) return false;
+        return Equals(obj as Speaker);
     }
 
-    public static bool Equals(ISpeaker x, ISpeaker y)
+    public static bool Equals(Speaker x, Speaker y)
     {
         if (ReferenceEquals(x, y)) return true;
-        if (x is null || y is null) return false;
+        if (x is null) return y is null;
         return x.Equals(y);
     }
 
     public abstract override int GetHashCode();
 
-    public static bool operator==(ISpeaker x, ISpeaker y) => Equals(x, y);
-    public static bool operator!=(ISpeaker x, ISpeaker y) => !Equals(x, y);
+    public static bool operator ==(Speaker x, Speaker y) => Equals(x, y);
+    public static bool operator !=(Speaker x, Speaker y) => !Equals(x, y);
 }

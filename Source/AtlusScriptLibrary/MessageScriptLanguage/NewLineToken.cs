@@ -27,9 +27,23 @@ public class NewLineToken : IToken, IEquatable<NewLineToken>
     }
 
     public bool Equals(NewLineToken other) => true;
-    public override bool Equals(object obj) => obj is TokenKind.NewLine;
-    public override int GetHashCode() => Kind.GetHashCode();
+    public override bool Equals(object obj) => obj is NewLineToken;
 
-    public static bool operator ==(NewLineToken x, NewLineToken y) => x.Equals(y);
-    public static bool operator !=(NewLineToken x, NewLineToken y) => !x.Equals(y);
+    public bool Equals(IToken other) => other.Kind == TokenKind.NewLine;
+
+    public override int GetHashCode() => HashCode.Combine(Kind, ASCIIValue);
+
+    public static bool Equals(NewLineToken a, IToken b)
+    {
+        if (ReferenceEquals(a, b)) return true;
+        if (a is null) return b is null;
+        return a.Equals(b);
+    }
+    public static bool Equals(IToken a, NewLineToken b) => Equals(b, a);
+
+    public static bool operator ==(NewLineToken x, IToken y) => Equals(x, y);
+    public static bool operator !=(NewLineToken x, IToken y) => !Equals(x, y);
+
+    public static bool operator ==(IToken x, NewLineToken y) => Equals(y, x);
+    public static bool operator !=(IToken x, NewLineToken y) => !Equals(y, x);
 }
