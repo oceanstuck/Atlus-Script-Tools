@@ -255,7 +255,6 @@ namespace AtlusScriptLibrary.FlowScriptLanguage.Tests
         {
             var a = FlowScript.FromFile("TestResources/Version3BigEndian.bf");
             var b = FlowScript.FromFile("TestResources/Version3BigEndian.bf");
-            //var dialogComparer = new DialogComparer();
 
             Assert.AreEqual(a.Procedures[0], b.Procedures[0]);
             Assert.AreNotEqual(a.Procedures[0], b.Procedures[1]);
@@ -266,9 +265,6 @@ namespace AtlusScriptLibrary.FlowScriptLanguage.Tests
             Assert.AreNotEqual(a.MessageScript.Dialogs[3], b.MessageScript.Dialogs[9]);
             Assert.AreNotEqual(a.MessageScript.Dialogs[3], b.MessageScript.Dialogs[4]);
             Assert.IsTrue(a.MessageScript.Dialogs[0] == b.MessageScript.Dialogs[0]);
-
-            //Debug.Assert(dialogComparer.Equals(a.MessageScript.Dialogs[0], a.MessageScript.Dialogs[0]));
-            //Debug.Assert(dialogComparer.Equals(a.MessageScript.Dialogs[0], a.MessageScript.Dialogs[0]));
         }
     }
 }
