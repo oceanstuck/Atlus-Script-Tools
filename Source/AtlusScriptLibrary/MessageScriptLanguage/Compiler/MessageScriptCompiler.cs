@@ -412,7 +412,7 @@ public class MessageScriptCompiler
             if (!nameParts[nameParts.Length - 2].Equals("index", StringComparison.OrdinalIgnoreCase)) continue;
             if (!uint.TryParse(nameParts[nameParts.Length - 1], out var index))
             {
-                LogError($"Unable to parse procedure index {nameParts[nameParts.Length - 1]}. Index will not be changed");
+                LogError($"Unable to parse message index {nameParts[nameParts.Length - 1]}. Index will not be changed");
                 continue;
             }
 
