@@ -67,7 +67,7 @@ public sealed class SelectionDialog : Dialog, IEquatable<SelectionDialog>
         return Options.GetEnumerator();
     }
 
-    public override bool Equals(SelectionDialog obj)
+    public bool Equals(SelectionDialog obj)
     {
         if (ReferenceEquals(this, obj)) return true;
         if (obj is null) { return false; }
@@ -76,7 +76,6 @@ public sealed class SelectionDialog : Dialog, IEquatable<SelectionDialog>
         if (Pattern != obj.Pattern) return false;
         return Options.SequenceEqual(obj.Options);
     }
-    public override bool Equals(MessageDialog other) => false;
 
     public override bool Equals(object obj)
     {
@@ -86,5 +85,7 @@ public sealed class SelectionDialog : Dialog, IEquatable<SelectionDialog>
         return Equals(obj as SelectionDialog);
     }
 
-    public override int GetHashCode() => HashCode.Combine(Name, Options, Pattern);
+    public override int GetHashCode() => HashCode.Combine(Kind, Name, Options, Pattern);
+
+    public override bool Equals(Dialog other) => other is SelectionDialog && Equals(other as SelectionDialog);
 }

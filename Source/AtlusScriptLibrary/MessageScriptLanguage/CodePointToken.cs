@@ -7,7 +7,7 @@ namespace AtlusScriptLibrary.MessageScriptLanguage;
 /// <summary>
 /// Represents a code point token. This maps to a glyph on the game's font.
 /// </summary>
-public struct CodePointToken : IToken, IEquatable<CodePointToken>
+public class CodePointToken : Token, IEquatable<CodePointToken>
 {
     public IReadOnlyList<byte> Bytes { get; }
 
@@ -40,7 +40,7 @@ public struct CodePointToken : IToken, IEquatable<CodePointToken>
     /// <summary>
     /// Gets the token type of this token.
     /// </summary>
-    TokenKind IToken.Kind => TokenKind.CodePoint;
+    public override TokenKind Kind => TokenKind.CodePoint;
 
     /// <summary>
     /// Converts this token to its string representation.
@@ -51,27 +51,21 @@ public struct CodePointToken : IToken, IEquatable<CodePointToken>
         return $"[{string.Join(" ", Bytes.Select(x => x.ToString("X2")))}]";
     }
 
-    public bool Equals(CodePointToken other) => Bytes.SequenceEqual(other.Bytes);
-    public override bool Equals(object obj) => Equals(obj as IToken);
-
-    public bool Equals(IToken other)
+    public bool Equals(CodePointToken other)
     {
+        if (ReferenceEquals(this, other)) return true;
+        if (other is null) return false;
+        return Bytes.SequenceEqual(other.Bytes);
+    }
+
+    public override bool Equals(object obj) => obj is CodePointToken && Equals(obj as CodePointToken);
+
+    public override bool Equals(Token other)
+    {
+        if (ReferenceEquals(this, other)) return true;
         if (other is null || other.Kind != TokenKind.CodePoint) return false;
-        return Equals((CodePointToken)other);
+        return Bytes.SequenceEqual(((CodePointToken)other).Bytes);
     }
 
-    public static bool Equals(CodePointToken a, IToken b)
-    {
-        if (a == null) return b is null;
-        return a.Equals(b);
-    }
-    public static bool Equals(IToken a, CodePointToken b) => Equals(b, a);
-
-    public static bool operator ==(CodePointToken x, IToken y) => Equals(x, y);
-    public static bool operator !=(CodePointToken x, IToken y) => !Equals(x, y);
-
-    public static bool operator ==(IToken x, CodePointToken y) => Equals(y, x);
-    public static bool operator !=(IToken x, CodePointToken y) => !Equals(y, x);
-
-    public override int GetHashCode() => Bytes.GetHashCode();
+    public override int GetHashCode() => HashCode.Combine(Kind, Bytes);
 }

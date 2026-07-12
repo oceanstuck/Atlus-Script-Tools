@@ -24,30 +24,12 @@ public abstract class Dialog : IEnumerable<TokenText>, IEquatable<Dialog>
     /// </summary>
     public abstract List<TokenText> Lines { get; }
 
-    public bool Equals(Dialog other)
-    {
-        if (ReferenceEquals(this, other)) return true;
-        if (other is null || this.Kind != other.Kind) return false;
-
-        switch (Kind)
-        {
-            case DialogKind.Message:
-                return Equals(other as MessageDialog);
-            case DialogKind.Selection:
-                return Equals(other as SelectionDialog);
-            default:
-                throw new Exception("Invalid dialog kind");
-        }
-    }
-
-    public abstract bool Equals(MessageDialog other);
-    public abstract bool Equals(SelectionDialog other);
-
-    public override bool Equals(object obj) => Equals(obj as Dialog);
+    public abstract bool Equals(Dialog other);
+    public override bool Equals(object obj) => obj is Dialog && Equals(obj as Dialog);
     public static bool Equals(Dialog x, Dialog y)
     {
         if (ReferenceEquals(x, y)) return true;
-        if (x is null || y is null) return false;
+        if (x is null) return y is null;
         return x.Equals(y);
     }
 

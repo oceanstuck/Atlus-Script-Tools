@@ -7,7 +7,7 @@ namespace AtlusScriptLibrary.MessageScriptLanguage;
 /// <summary>
 /// Represents a message script function token.
 /// </summary>
-public struct FunctionToken : IToken, IEquatable<FunctionToken>
+public class FunctionToken : Token, IEquatable<FunctionToken>
 {
     /// <summary>
     /// Gets the function table index.
@@ -90,37 +90,23 @@ public struct FunctionToken : IToken, IEquatable<FunctionToken>
 
     public bool Equals(FunctionToken other)
     {
+        if (ReferenceEquals(this, other)) return true;
+        if (other is null) return false;
+
         if (FunctionTableIndex != other.FunctionTableIndex) return false;
         if (FunctionIndex != other.FunctionIndex) return false;
         if (UseIdentifierByte != other.UseIdentifierByte) return false;
         return Arguments.SequenceEqual(other.Arguments);
     }
 
-    public override bool Equals(object obj) => Equals(obj as IToken);
+    public override bool Equals(object obj) => obj is FunctionToken && Equals(obj as FunctionToken);
 
-    public override int GetHashCode() => HashCode.Combine(FunctionTableIndex, FunctionIndex, UseIdentifierByte, Arguments);
+    public override int GetHashCode() => HashCode.Combine(Kind, FunctionTableIndex, FunctionIndex, UseIdentifierByte, Arguments);
 
-    public bool Equals(IToken other)
-    {
-        if (other is null || other.Kind != TokenKind.Function) return false;
-        return Equals((FunctionToken)other);
-    }
-
-    public static bool Equals(FunctionToken a, IToken b)
-    {
-        if (a == null) return b is null;
-        return a.Equals(b);
-    }
-    public static bool Equals(IToken a, FunctionToken b) => Equals(b, a);
-
-    public static bool operator ==(FunctionToken x, IToken y) => Equals(x, y);
-    public static bool operator !=(FunctionToken x, IToken y) => !Equals(x, y);
-
-    public static bool operator ==(IToken x, FunctionToken y) => Equals(y, x);
-    public static bool operator !=(IToken x, FunctionToken y) => !Equals(y, x);
+    public override bool Equals(Token other) => other is FunctionToken && Equals(other as FunctionToken);
 
     /// <summary>
     /// Gets the token type.
     /// </summary>
-    TokenKind IToken.Kind => TokenKind.Function;
+    public override TokenKind Kind => TokenKind.Function;
 }

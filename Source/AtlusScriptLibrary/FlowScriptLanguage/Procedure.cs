@@ -57,16 +57,10 @@ public class Procedure : IEquatable<Procedure>
 
         if (Name != other.Name) return false;
         if (!Instructions.SequenceEqual(other.Instructions)) return false;
-        return (Labels.SequenceEqual(other.Labels));
+        return Labels.SequenceEqual(other.Labels);
     }
 
-    public override bool Equals(object obj)
-    {
-        if (ReferenceEquals(this, obj)) return true;
-        if (obj is null) return false;
-
-        return Equals(obj as Procedure);
-    }
+    public override bool Equals(object obj) => obj is Procedure && Equals(obj as Procedure);
 
     public static bool Equals(Procedure a, Procedure b)
     {

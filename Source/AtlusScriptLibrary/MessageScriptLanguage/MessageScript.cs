@@ -367,7 +367,7 @@ public class MessageScript
         return line;
     }
 
-    private static bool TryParseTokens(IReadOnlyList<byte> buffer, ref int bufferIndex, out List<IToken> tokens, FormatVersion version, Encoding encoding)
+    private static bool TryParseTokens(IReadOnlyList<byte> buffer, ref int bufferIndex, out List<Token> tokens, FormatVersion version, Encoding encoding)
     {
         if (version.HasFlag(FormatVersion.Version2))
         {

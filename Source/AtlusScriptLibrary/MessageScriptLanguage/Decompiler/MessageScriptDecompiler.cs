@@ -148,7 +148,7 @@ public sealed class MessageScriptDecompiler : IDisposable
             WriteTag("e");
     }
 
-    public void Decompile(IToken token)
+    public void Decompile(Token token)
     {
         switch (token.Kind)
         {

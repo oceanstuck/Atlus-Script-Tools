@@ -472,7 +472,7 @@ class Program
         }
     }
 
-    static void WriteToken(IToken token)
+    static void WriteToken(Token token)
     {
         if (token.Kind == TokenKind.CodePoint)
         {

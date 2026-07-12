@@ -47,12 +47,7 @@ public class Label
         return Name == other.Name && InstructionIndex == other.InstructionIndex;
     }
 
-    public override bool Equals(object obj)
-    {
-        if (ReferenceEquals(this, obj)) return true;
-        if (obj is null || obj is not Label) return false;
-        return Equals(obj as Label);
-    }
+    public override bool Equals(object obj) => obj is Label && Equals(obj as Label);
 
     public static bool Equals (Label x, Label y)
     {

@@ -114,24 +114,19 @@ public sealed class MessageDialog : Dialog, IEquatable<MessageDialog>
         return Pages.GetEnumerator();
     }
 
-    public override bool Equals(MessageDialog obj)
+    public bool Equals(MessageDialog obj)
     {
         if (ReferenceEquals(this, obj)) return true;
         if (obj is null) return false;
 
         if (Name != obj.Name) return false;
-        if (!Speaker.Equals(obj.Speaker)) return false;
+        if (Speaker != obj.Speaker) return false;
         return Pages.SequenceEqual(obj.Pages);
     }
-    public override bool Equals(SelectionDialog other) => false;
 
-    public override bool Equals(object obj)
-    {
-        if (ReferenceEquals(this, obj)) return true;
-        if (obj is null || obj is not MessageDialog) return false;
+    public override bool Equals(object obj) => obj is MessageDialog && Equals(obj as MessageDialog);
 
-        return Equals((MessageDialog)obj);
-    }
+    public override int GetHashCode() => HashCode.Combine(Kind, Name, Speaker, Pages);
 
-    public override int GetHashCode() => HashCode.Combine(Name, Speaker, Pages);
+    public override bool Equals(Dialog other) => other is MessageDialog && Equals(other as MessageDialog);
 }

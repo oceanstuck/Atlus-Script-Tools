@@ -6,7 +6,7 @@ namespace AtlusScriptLibrary.MessageScriptLanguage;
 /// <summary>
 /// Represents a message script value token.
 /// </summary>
-public struct StringToken : IToken, IEquatable<StringToken>
+public class StringToken : Token, IEquatable<StringToken>
 {
     /// <summary>
     /// Gets the value contained by this token. This can be a single word or a whole sentence.
@@ -34,29 +34,23 @@ public struct StringToken : IToken, IEquatable<StringToken>
     /// <summary>
     /// Gets the token type.
     /// </summary>
-    TokenKind IToken.Kind => TokenKind.String;
+    public override TokenKind Kind => TokenKind.String;
 
-    public bool Equals(StringToken other) => Value == other.Value;
-    public override bool Equals(object obj) => Equals(obj as IToken);
-
-    public static bool Equals(StringToken a, IToken b)
+    public bool Equals(StringToken other)
     {
-        if (a == null) return b is null;
-        return a.Equals(b);
+        if (ReferenceEquals(this, other)) return true;
+        if (other is null) return false;
+        return Value == other.Value;
     }
-    public static bool Equals(IToken a, StringToken b) => Equals(b, a);
 
-    public static bool operator ==(StringToken x, IToken y) => Equals(x, y);
-    public static bool operator !=(StringToken x, IToken y) => !Equals(x, y);
+    public override bool Equals(object obj) => obj is StringToken && Equals(obj as StringToken);
 
-    public static bool operator ==(IToken x, StringToken y) => Equals(y, x);
-    public static bool operator !=(IToken x, StringToken y) => !Equals(y, x);
-
-    public bool Equals(IToken other)
+    public override bool Equals(Token other)
     {
+        if (ReferenceEquals(this, other)) return true;
         if (other is null || other.Kind != TokenKind.String) return false;
-        return Equals((StringToken)other);
+        return Value == ((StringToken)other).Value;
     }
 
-    public override int GetHashCode() => Value.GetHashCode();
+    public override int GetHashCode() => HashCode.Combine(Kind, Value);
 }

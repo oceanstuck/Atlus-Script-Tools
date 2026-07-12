@@ -8,26 +8,26 @@ namespace AtlusScriptLibrary.MessageScriptLanguage;
 /// <summary>
 /// Represents a single line of text.
 /// </summary>
-public class TokenText : IEnumerable<IToken>, IEquatable<TokenText>
+public class TokenText : IEnumerable<Token>, IEquatable<TokenText>
 {
     /// <summary>
     /// Gets the list of tokens contained in this line of text.
     /// </summary>
-    public List<IToken> Tokens { get; }
+    public List<Token> Tokens { get; }
 
     /// <summary>
     /// Construct a new empty message script line.
     /// </summary>
     public TokenText()
     {
-        Tokens = new List<IToken>();
+        Tokens = new List<Token>();
     }
 
     /// <summary>
     /// Constructs a new message script line with a list of tokens.
     /// </summary>
     /// <param name="tokens">The list of message script tokens.</param>
-    public TokenText(List<IToken> tokens)
+    public TokenText(List<Token> tokens)
     {
         Tokens = tokens ?? throw new ArgumentNullException(nameof(tokens));
     }
@@ -36,7 +36,7 @@ public class TokenText : IEnumerable<IToken>, IEquatable<TokenText>
     /// Constructs a new message script line with a list of tokens.
     /// </summary>
     /// <param name="tokens">The list of message script tokens.</param>
-    public TokenText(params IToken[] tokens)
+    public TokenText(params Token[] tokens)
     {
         Tokens = tokens.ToList();
     }
@@ -45,9 +45,9 @@ public class TokenText : IEnumerable<IToken>, IEquatable<TokenText>
     /// Returns an enumerator that iterates through the tokens in the line.
     /// </summary>
     /// <returns></returns>
-    public IEnumerator<IToken> GetEnumerator()
+    public IEnumerator<Token> GetEnumerator()
     {
-        return ((IEnumerable<IToken>)Tokens).GetEnumerator();
+        return ((IEnumerable<Token>)Tokens).GetEnumerator();
     }
 
     /// <summary>
@@ -56,7 +56,7 @@ public class TokenText : IEnumerable<IToken>, IEquatable<TokenText>
     /// <returns></returns>
     IEnumerator IEnumerable.GetEnumerator()
     {
-        return ((IEnumerable<IToken>)Tokens).GetEnumerator();
+        return ((IEnumerable<Token>)Tokens).GetEnumerator();
     }
 
     public bool Equals(TokenText obj)
@@ -64,7 +64,7 @@ public class TokenText : IEnumerable<IToken>, IEquatable<TokenText>
         if (ReferenceEquals(this, obj)) return true;
         if (obj is null) return false;
 
-        return Tokens.SequenceEqual(obj.Tokens, new TokenComparer());
+        return Tokens.SequenceEqual(obj.Tokens);
     }
 
     public override bool Equals(object obj)
@@ -72,7 +72,7 @@ public class TokenText : IEnumerable<IToken>, IEquatable<TokenText>
         if (ReferenceEquals(this, obj)) return true;
         if (obj is null || obj is not TokenText) return false;
 
-        return Equals((TokenText)obj);
+        return Tokens.SequenceEqual(((TokenText)obj).Tokens);
     }
 
     public static bool Equals(TokenText x, TokenText y)

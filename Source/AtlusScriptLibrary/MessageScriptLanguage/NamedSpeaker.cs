@@ -7,7 +7,7 @@ namespace AtlusScriptLibrary.MessageScriptLanguage;
 /// <summary>
 /// Represents a named dialogue message speaker.
 /// </summary>
-public sealed class NamedSpeaker : Speaker, IEnumerable<IToken>, IEquatable<NamedSpeaker>
+public sealed class NamedSpeaker : Speaker, IEnumerable<Token>, IEquatable<NamedSpeaker>
 {
     /// <summary>
     /// Gets the name of the speaker.
@@ -47,27 +47,33 @@ public sealed class NamedSpeaker : Speaker, IEnumerable<IToken>, IEquatable<Name
         return str;
     }
 
-    public IEnumerator<IToken> GetEnumerator()
+    public IEnumerator<Token> GetEnumerator()
     {
-        return ((IEnumerable<IToken>)Name).GetEnumerator();
+        return ((IEnumerable<Token>)Name).GetEnumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator()
     {
-        return ((IEnumerable<IToken>)Name).GetEnumerator();
+        return ((IEnumerable<Token>)Name).GetEnumerator();
     }
 
-    public override bool Equals(NamedSpeaker other) => Name == other.Name;
-    public override bool Equals(VariableSpeaker other) => false;
-
-    public override bool Equals(object obj)
+    public bool Equals(NamedSpeaker other)
     {
-        if (ReferenceEquals(this, obj)) return true;
-        if (obj is null || obj is not NamedSpeaker) return false;
-        return Equals(obj as NamedSpeaker);
+        if (ReferenceEquals(this, other)) return true;
+        if (other is null) return false;
+        return Name == other.Name;
     }
 
-    public override int GetHashCode() => Name.GetHashCode();
+    public override bool Equals(object obj) => obj is NamedSpeaker && Equals(obj as NamedSpeaker);
+
+    public override int GetHashCode() => HashCode.Combine(Kind, Name);
+
+    public override bool Equals(Speaker other)
+    {
+        if (ReferenceEquals(this, other)) return true;
+        if (other is null || other.Kind != SpeakerKind.Named) return false;
+        return Name == ((NamedSpeaker)other).Name;
+    }
 
     /// <summary>
     /// Gets the speaker type.

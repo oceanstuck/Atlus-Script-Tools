@@ -27,17 +27,18 @@ public sealed class VariableSpeaker : Speaker, IEquatable<VariableSpeaker>
         return $"<variable name {Index}>";
     }
 
-    public override bool Equals(NamedSpeaker other) => false;
-    public override bool Equals(VariableSpeaker other) => Index == other.Index;
+    public bool Equals(VariableSpeaker other) => other is not null && Index == other.Index;
 
-    public override bool Equals(object obj)
+    public override bool Equals(object obj) => obj is VariableSpeaker && Equals(obj as VariableSpeaker);
+
+    public override int GetHashCode() => HashCode.Combine(Kind, Index);
+
+    public override bool Equals(Speaker other)
     {
-        if (ReferenceEquals(this, obj)) return true;
-        if (obj is null || obj is not VariableSpeaker) return false;
-        return Equals(obj as VariableSpeaker);
+        if (ReferenceEquals(this, other)) return true;
+        if (other is null || other.Kind != SpeakerKind.Named) return false;
+        return Index == ((VariableSpeaker)other).Index;
     }
-
-    public override int GetHashCode() => HashCode.Combine(Index);
 
     /// <summary>
     /// Gets the speaker type.
